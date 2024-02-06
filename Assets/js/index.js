@@ -1,3 +1,5 @@
+// questions
+
 const questions = [
     {
         question: "Commonly used data types DO NOT include..?",
@@ -51,19 +53,36 @@ const questions = [
     }
 ];
 
+// Code for quiz
+
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
+const timerEl = document.getElementById("timer");
+const inputEl = document.getElementById("init-input");
 
 let currentQuestionIndex = 0;
 let score = 0;
+let timeRemaining = 60;
+let countdown;
+let highscoresList = JSON.parse(localStorage.getItem('highscores-list')) || [];
 
 function startQuiz() {
     currentQuestionIndex = 0;
     score = 0;
     nextButton.innerHTML = "Next";
+    countdown = setInterval(timer, 1000);
     showQuestion();
 }
+
+function timer(){
+    timeRemaining-- 
+    timerEl.textContent = timeRemaining;
+    if(timeRemaining <= 0){
+        showScore();
+    }
+}
+
 function showQuestion() {
     resetState();
     let currentQuestion = questions[currentQuestionIndex];
@@ -98,6 +117,7 @@ function selectAnswer(e){
         score++;
     }else{
         selectedBtn.classList.add("incorrect");
+        timeRemaining -=10;
     }
     Array.from(answerButtons.children).forEach(button => {
         if(button.dataset.correct === "true"){
@@ -113,6 +133,9 @@ function showScore(){
     questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
     nextButton.innerHTML = 'Play Again';
     nextButton.style.display = "block";
+    clearInterval(countdown);
+    currentQuestionIndex = 0;
+    saveScore();
 }
 
 function handleNextButton(){
@@ -125,95 +148,22 @@ function handleNextButton(){
 }
 
 nextButton.addEventListener("click", ()=>{
-    if(currentQuestionIndex < questions.length){
+    if(nextButton.innerHTML === 'Next'){
         handleNextButton();
     }else{
         startQuiz();
     }
 })
 
+function saveScore(){
+    let initials = inputEl.value;
+    highscoresList.push({
+        initials,
+        score
+    })
+    localStorage.setItem('highscores-list', JSON.stringify(highscoresList))
+}
+
 startQuiz();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var headerElem = document.querySelector('header')
-// var startBtn = document.querySelector('#start-btn')
-// var sectionElem = document.querySelector('section')
-
-// var questionsList = [
-//     {
-//         title: 'Commonly used data types in JavaScript DO NOT include..?',
-//         answers: ['A','B','C','D'],
-//         correct: 'A',
-
-//     },
-
-//     {
-//         title: 'Commonly used data types in JavaScript DO NOT include..?',
-//         answers: ['A','B','C','D'],
-//         correct: 'A',
-
-//     }
-// ]
-
-// function startQuiz(event) {
-//     console.log(startBtn.id)
-//     console.log('starting quiz')
-//     console.log({ event });
-//     sectionElem.setAttribute('hidden', 'true')
-// }
-
-
-
-
-
-
-
-
-// startBtn.addEventListener('click', startQuiz)
+// Timer and Highscores

@@ -9,7 +9,30 @@
 body {
     background: lightblue;
 }
+header {
+    padding: 30px;
+    margin: 10px;
+}
+a, h3 {
+    color: black;
+    font-size: large;
+    display: flex;
+    text-decoration: none;
+    
+}
+footer{
+    display: flex;
+    justify-content: center;
+}
+
+
 /* Classes and ID*/
+.row{
+    display: flex;
+}
+.justify-between {
+    justify-content: space-between;
+}
 .app {
     background: #fff;
     width: 90%;
